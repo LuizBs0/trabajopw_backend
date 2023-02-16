@@ -29,42 +29,47 @@ def login(request):
                 }
                 strError = json.dumps(dictError)
                 return HttpResponse(strError)
-        else:
+    else:
+        dictError = {
+            'error': 'Tipo de peticion no existe'
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+
+@csrf_exempt
+def register(request):
+    if request.method == 'POST':
+        dictDataRequest = json.loads(request.body)
+        usuario = dictDataRequest['usuario']
+        password = dictDataRequest['password']        
+
+        listaUsuarios = Usuario.objects.all()
+
+        for u in listaUsuarios:
+            if u.usuario == usuario:
+                dictError = {
+                'error': 'Usuario ya registrado'
+                }
+                strError = json.dumps(dictError)
+                return HttpResponse(strError)
+            else:
+                newUsuario = Usuario(usuario=usuario, password=password)
+                newUsuario.save()
+                dictOK = {
+                    'error': ''
+                }
+                return HttpResponse(json.dumps(dictOK))
+    else:
             dictError = {
                 'error': 'Tipo de peticion no existe'
             }
             strError = json.dumps(dictError)
             return HttpResponse(strError)
 
-# def login(request):
-#     if request.method == 'GET':
-#         usuario = request.GET.get('usu')
-#         password = request.GET.get('pas')
-
-#         usuarios = Usuario.objects.all()
-
-#         for u in usuarios: 
-#             if u.usuario == usuario and u.password == password:
-#                 dictOK = {
-#                     'error': '',
-#                     'userid': u.pk
-#                 }
-#                 return HttpResponse(json.dumps(dictOK))
-#             else:
-#                 dictError = {
-#                 'error': 'No existe esa cuenta'
-#                 }
-#                 strError = json.dumps(dictError)
-#                 return HttpResponse(strError)
-#         else:
-#             dictError = {
-#                 'error': 'Tipo de peticion no existe'
-#             }
-#             strError = json.dumps(dictError)
-#             return HttpResponse(strError)
 
 
         
+
 
 #CATEGORIA TERMINADO
 def categoria_res(request):
