@@ -19,4 +19,5 @@ import clientes
 
 urlpatterns = [
     path('clientes/', include('clientes.urls')),
+    path('admin/', admin.site.urls)
 ]
