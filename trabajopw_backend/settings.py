@@ -25,12 +25,20 @@ SECRET_KEY = 'django-insecure-am6f%s_)(#&8t#z*mz9dz!5f3q=ut=-#y02$&sur&l=#_4zcc(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "djangoback.azurewebsites.net"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://djangoback.azurewebsites.net"
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,11 +91,11 @@ WSGI_APPLICATION = 'trabajopw_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'clientes',
+        'NAME': 'postgres',
         'USER': 'clientes',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': ''
+        'PASSWORD': 'luis54321$',
+        'HOST': 'clientes.postgres.database.azure.com',
+        'PORT': '5432'
     }
 }
 
@@ -126,6 +135,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = './static/'
+
+STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
