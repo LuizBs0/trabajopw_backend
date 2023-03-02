@@ -14,21 +14,45 @@ def login(request):
         usuario = dictDataRequest['usuario']
         password = dictDataRequest['password']
 
-        usuarios = Usuario.objects.all()
-
-        for u in usuarios: 
-            if u.usuario == usuario and u.password == password:
-                dictOK = {
-                    'error': '',
-                    'userid': u.pk
-                }
-                return HttpResponse(json.dumps(dictOK))
-            else:
-                dictError = {
+        
+        try:
+            usuarios = Usuario.objects.get(usuario=usuario, password=password)
+            dictOK = {
+                    "error": "",
+                    "userid": usuarios.pk,
+            }
+            return HttpResponse(json.dumps(dictOK))
+        except Usuario.DoesNotExist:
+            dictError = {
                 'error': 'No existe esa cuenta'
                 }
-                strError = json.dumps(dictError)
-                return HttpResponse(strError)
+            strError = json.dumps(dictError)
+            return HttpResponse(strError)
+
+        # if usuarios:
+            
+        # else:
+            
+    
+        # for u in usuarios: 
+        #     listaUsuarios.append({
+        #             "id": u.pk,
+        #             "nombre": u.usuario,
+        #             "password": u.password
+        #     })
+        #     if u.usuario == usuario and u.password == password:
+        #         dictOK = {
+        #             'error': '',
+        #             'userid': u.pk
+        #         }
+        #         return HttpResponse(json.dumps(dictOK))
+        #     else:
+        #         dictError = {
+        #         'error': 'No existe esa cuenta',
+        #         'usuarios': listaUsuarios
+        #         }
+        #         strError = json.dumps(dictError)
+        #         return HttpResponse(strError)
     else:
         dictError = {
             'error': 'Tipo de peticion no existe'
@@ -170,6 +194,31 @@ def restaurantes(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
 
+def listaUsuarios(request):
+    if request.method == 'GET':
+        categorias = Usuario.objects.all()
+        listaCategorias = []
+
+        for cat in categorias:
+            listaCategorias.append({
+                "id": cat.pk,
+                "usuario": cat.usuario,
+                "password": cat.password
+            })
+        
+        dictResponse = {
+            "error": "",
+            "usuarios": listaCategorias
+        }
+        strResponse = json.dumps(dictResponse)
+        return HttpResponse(strResponse)
+
+    else:
+        dictError = {
+            "error": "Tipo de peticion no existe"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
 
 #PLATOS TERMINADO
 def platos(request):
